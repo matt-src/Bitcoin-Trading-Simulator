@@ -4,19 +4,18 @@ import React, { useState, useEffect } from 'react';
 
 function App() {
 
-  const [data, setData] = useState({
-    shares: 0,
-    average: 0,
-    amount: 1,
-    pnl: 0,
-    data: null
-  });
+  const [shares, setShares] = useState(0);
+  const [average, setAverage] = useState(0);
+  const [amount, setAmount] = useState(1);
+  const [pnl, setPnl] = useState(0); //Profit/loss on current position
+  const [data, setData] = useState({}); //Bitcoin price information
+
 
   useEffect(() => {
     updatePrice().then(r => r); //Need to use 'then' here instead of await, since we aren't in an async function
     const interval = setInterval(async () => {
       await updatePrice();
-    }, 60 * 1000);
+    }, 10 * 1000);
     return () => {
       clearInterval(interval);
     }
@@ -24,14 +23,14 @@ function App() {
 
   const updatePrice = async () => {
     let price = await getPriceFromApi();
-    setData((data)=>{
-      return {...data, ...price}
-    });
+    console.log("price:");
+    console.log(price);
+    setData(price);
   };
 
   const buyShares = () => {
-    console.log("buying " + data.amount);
-    tradeShares(data.amount);
+    console.log("buying " + amount);
+    tradeShares(amount);
   };
 
   // Create our number formatter.
@@ -41,41 +40,34 @@ function App() {
   });
 
   const sellShares = () => {
-    let newAmount = data.shares - data.amount;
+    let newAmount = shares - amount;
     if (newAmount < 0) {
       console.log("can't have less than 0 shares");
       return;
     }
-    tradeShares(data.amount * -1);
+    tradeShares(amount * -1);
   };
 
-  const tradeShares = (amount) => {
-    let newShares = data.shares + parseInt(amount);
-    let newAverage = data.average;
-    if(amount > 0){ //Update average price
-      let rate = parseFloat(getPrice().replace(',', ''));
-      let valueOfCurrentHoldings = (data.shares * data.average);
-      let valueOfNewHoldings = amount * rate;
-      let totalAmount = data.shares + amount;
-      newAverage = (valueOfCurrentHoldings +valueOfNewHoldings) / totalAmount;
-    }
-    let newData = Object.assign({}, data, {shares: newShares, average: newAverage });
-    console.log("new Data:");
-    console.log(newData);
-    
-    setData(newData);
-    console.log("new shares:");
-    console.log(data.shares)
+  const tradeShares = (tradeAmount) => {
+    let newShares = shares + parseInt(tradeAmount);
+    if(tradeAmount > 0){ //Update average price if this is a BUY order
+      let rate = parseFloat(getPrice());
+      let valueOfCurrentHoldings = (shares * average);
+      let valueOfNewHoldings = tradeAmount * rate;
+      let totalAmount = shares + tradeAmount;
+      let newAverage = (valueOfCurrentHoldings +valueOfNewHoldings) / totalAmount;
+      setAverage(newAverage);
+    }    
+    setShares(newShares);
   };
 
   const handleAmountChange = (e) => {
-    let newData = Object.assign({}, data, { amount: parseInt(e.target.value) });
-    setData(newData)
+    setAmount(parseInt(e.target.value));
   };
 
   const getPrice = () => {
     try {
-      return data.data.bpi.USD.rate;
+      return data.data.USD.last;
     } catch (e) {
       return "0";
     }
@@ -84,8 +76,8 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>$BTC {data.data ? getPrice() : <p>data not loaded</p>}</h2>
-      <h2>Shares: {data.shares}</h2>
+      <h2>$BTC {data ? getPrice() : <p>data not loaded</p>}</h2>
+      <h2>Shares: {shares}</h2>
       <button onClick={buyShares}>Buy</button>
       <button onClick={sellShares}>Sell</button>
       <button onClick={updatePrice}>Update</button>
@@ -97,12 +89,13 @@ function App() {
         min="1"
         max="1000"
         placeholder="1"
-        value={data.amount}
+        value={amount}
         onChange={handleAmountChange}
       />
       <div>
-        <h1>Balance {data.data ? (formatter.format(parseInt(getPrice().replace(',', '')) * data.shares)) : <p>-</p>}</h1>
-        <h1>Average Price {formatter.format(data.average)}</h1>
+        <h1>Balance {data ? (formatter.format(parseInt(getPrice()) * shares)) : <p>-</p>}</h1>
+        <h1>Average Price {formatter.format(average)}</h1>
+        <h1>P/L {formatter.format(pnl)} </h1>
       </div>
     </div>
   );
