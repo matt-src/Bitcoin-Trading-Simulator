@@ -7,9 +7,8 @@ function App() {
   const [shares, setShares] = useState(0);
   const [average, setAverage] = useState(0);
   const [amount, setAmount] = useState(1);
-  const [pnl, setPnl] = useState(0); //Profit/loss on current position
   const [data, setData] = useState({}); //Bitcoin price information
-
+  const [realized, setRealized] = useState(0); //Realized profit/loss
 
   useEffect(() => {
     updatePrice().then(r => r); //Need to use 'then' here instead of await, since we aren't in an async function
@@ -46,6 +45,10 @@ function App() {
       return;
     }
     tradeShares(amount * -1);
+    //Update realized PNL
+    console.log("average: " + average);
+    console.log("price: " + getPrice());
+    setRealized(realized + (amount * (getPrice() - average)));
   };
 
   const tradeShares = (tradeAmount) => {
@@ -77,7 +80,7 @@ function App() {
     <div className="App">
       <h1>Rekt Simulator</h1>
       <h2>$BTC {data ? getPrice() : <p>data not loaded</p>}</h2>
-      <h2>Shares: {shares}</h2>
+      
       <button onClick={buyShares}>Buy</button>
       <button onClick={sellShares}>Sell</button>
       <button onClick={updatePrice}>Update</button>
@@ -93,9 +96,12 @@ function App() {
         onChange={handleAmountChange}
       />
       <div>
-        <h1>Balance {data ? (formatter.format(parseInt(getPrice()) * shares)) : <p>-</p>}</h1>
+        <h1>Position:</h1>
+        <h1>Long: {shares} BTC</h1>
+        <h1>Position value {data ? (formatter.format(parseFloat(getPrice()) * shares)) : <p>-</p>}</h1>
         <h1>Average Price {formatter.format(average)}</h1>
-        <h1>P/L {formatter.format(pnl)} </h1>
+        <h1>P/L unrealized {formatter.format( (parseFloat(getPrice()) - average) * shares) }</h1>
+        <h1>P/L realized { formatter.format(realized)}</h1>
       </div>
     </div>
   );
