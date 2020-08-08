@@ -24,6 +24,7 @@ function App() {
   const [average, setAverage] = useState(0);
   const [amount, setAmount] = useState(1);
   const [data, setData] = useState({}); //Bitcoin price information
+  const [lastPrice, setLastPrice] = useState(0); //Bitcoin price information
   const [realized, setRealized] = useState(0); //Realized profit/loss
 
   const classes = useStyles();
@@ -40,8 +41,12 @@ function App() {
 
   const updatePrice = async () => {
     let price = await getPriceFromApi();
-    console.log("price:");
-    console.log(price);
+    if(data){
+      console.log("updating price, current data:")
+      console.log(data);
+      console.log("new data:");
+      console.log(price);
+    }
     setData(price);
   };
 
@@ -97,7 +102,8 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>BTC {data ? getPrice() : <p>-</p>} USD <Button onClick={updatePrice} variant="contained" color="primary">Update</Button></h2>
+      <h2>Change {lastPrice ? lastPrice : <p>not loaded</p>}</h2>
+  <h2>BTC {data ? getPrice() : <p>-</p>} USD <Button onClick={updatePrice} variant="contained" color="primary">Update</Button></h2>
       <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
       <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
       
