@@ -13,20 +13,16 @@ function App() {
   });
 
   useEffect(() => {
-    console.log("initial update-price");
-    updatePrice().then(r => r);
+    updatePrice().then(r => r); //Need to use 'then' here instead of await, since we aren't in an async function
     const interval = setInterval(async () => {
       await updatePrice();
-      console.log("Updated the price");
-    }, 5 * 1000);
+    }, 60 * 1000);
     return () => {
-      console.log("unmounting");
       clearInterval(interval);
     }
   }, []);
 
   const updatePrice = async () => {
-    console.log("current data (from updatePrice): ", data);
     let price = await getPriceFromApi();
     setData((data)=>{
       return {...data, ...price}
@@ -57,21 +53,11 @@ function App() {
     let newShares = data.shares + parseInt(amount);
     let newAverage = data.average;
     if(amount > 0){ //Update average price
-      //console.log("updating average price");
       let rate = parseFloat(getPrice().replace(',', ''));
-      /**console.log("shares: " + data.shares);
-      console.log("average: " + data.average);
-      console.log("amount: " + amount);
-      console.log("rate: " + rate);*/
       let valueOfCurrentHoldings = (data.shares * data.average);
-      //console.log("value of current holdings: " + valueOfCurrentHoldings);
       let valueOfNewHoldings = amount * rate;
-      //console.log("value of new holdings: " + valueOfNewHoldings);
       let totalAmount = data.shares + amount;
-      //console.log("total Amount: " + totalAmount)
       newAverage = (valueOfCurrentHoldings +valueOfNewHoldings) / totalAmount;
-      //console.log("new average");
-      //console.log(newAverage);
     }
     let newData = Object.assign({}, data, {shares: newShares, average: newAverage });
     console.log("new Data:");
