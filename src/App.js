@@ -1,6 +1,22 @@
 import './App.css';
 import { getPriceFromApi } from './helpers/Prices';
 import React, { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});
 
 function App() {
 
@@ -9,6 +25,8 @@ function App() {
   const [amount, setAmount] = useState(1);
   const [data, setData] = useState({}); //Bitcoin price information
   const [realized, setRealized] = useState(0); //Realized profit/loss
+
+  const classes = useStyles();
 
   useEffect(() => {
     updatePrice().then(r => r); //Need to use 'then' here instead of await, since we aren't in an async function
@@ -53,14 +71,14 @@ function App() {
 
   const tradeShares = (tradeAmount) => {
     let newShares = shares + parseInt(tradeAmount);
-    if(tradeAmount > 0){ //Update average price if this is a BUY order
+    if (tradeAmount > 0) { //Update average price if this is a BUY order
       let rate = parseFloat(getPrice());
       let valueOfCurrentHoldings = (shares * average);
       let valueOfNewHoldings = tradeAmount * rate;
       let totalAmount = shares + tradeAmount;
-      let newAverage = (valueOfCurrentHoldings +valueOfNewHoldings) / totalAmount;
+      let newAverage = (valueOfCurrentHoldings + valueOfNewHoldings) / totalAmount;
       setAverage(newAverage);
-    }    
+    }
     setShares(newShares);
   };
 
@@ -79,11 +97,10 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>$BTC {data ? getPrice() : <p>data not loaded</p>}</h2>
+      <h2>BTC {data ? getPrice() : <p>-</p>} USD <Button onClick={updatePrice} variant="contained" color="primary">Update</Button></h2>
+      <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
+      <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
       
-      <button onClick={buyShares}>Buy</button>
-      <button onClick={sellShares}>Sell</button>
-      <button onClick={updatePrice}>Update</button>
       <label htmlFor="amount">Amount</label>
       <input
         id="amount"
@@ -95,14 +112,29 @@ function App() {
         value={amount}
         onChange={handleAmountChange}
       />
-      <div>
-        <h1>Position:</h1>
-        <h1>Long: {shares} BTC</h1>
-        <h1>Position value {data ? (formatter.format(parseFloat(getPrice()) * shares)) : <p>-</p>}</h1>
-        <h1>Average Price {formatter.format(average)}</h1>
-        <h1>P/L unrealized {formatter.format( (parseFloat(getPrice()) - average) * shares) }</h1>
-        <h1>P/L realized { formatter.format(realized)}</h1>
-      </div>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="caption table">
+        <caption>Position information</caption>
+        <TableHead>
+          <TableRow>
+            <TableCell>Position size</TableCell>
+            <TableCell align="right">Position value</TableCell>
+            <TableCell align="right">Average Price</TableCell>
+            <TableCell align="right">P/L unrealized</TableCell>
+            <TableCell align="right">P/L realized</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        <TableRow>
+          <TableCell component="th">{shares} BTC</TableCell>
+          <TableCell align="right">{data ? (formatter.format(parseFloat(getPrice()) * shares)) : <p>-</p>}</TableCell>
+          <TableCell align="right">{formatter.format(average)}</TableCell>
+          <TableCell align="right">{formatter.format((parseFloat(getPrice()) - average) * shares)}</TableCell>
+          <TableCell align="right">{formatter.format(realized)}</TableCell>
+        </TableRow>
+        </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
