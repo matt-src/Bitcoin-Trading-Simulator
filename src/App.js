@@ -11,10 +11,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
+import { StylesProvider } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650 //TODO: make this bigger so the table can't get cut off
+    maxWidth: '800px',
+    margin: "auto"
   },
   amountLabel: {
     paddingLeft: '10px',
@@ -83,12 +85,12 @@ function App() {
         };
       case AMOUNT_CHANGE:
         console.log("amount change");
-        if(action.value > 9999){
+        if (action.value > 9999) {
           return {
             ...state,
             amount: 9999
           }
-        } 
+        }
         return {
           ...state,
           amount: action.value
@@ -140,7 +142,7 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span>⮝</span> : <span>⮟</span>}{formatter.format(state.change)}</h2>
+      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span style={{ color: 'limegreen' }}>⮝</span> : <span style={{ color: 'red' }}>⮟</span>}{formatter.format(state.change)}</h2>
       <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
       <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
 
@@ -149,33 +151,36 @@ function App() {
         id="amount"
         name="amount"
         type="number"
-        inputProps={{ min: 1, max: 9999, style: { textAlign: 'center', fontSize: '1.3em' }}}
+        inputProps={{ min: 1, max: 9999, style: { textAlign: 'center', fontSize: '1.3em' } }}
         value={state.amount}
         onChange={handleAmountChange}
       />
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="caption table">
-          <caption>Position information</caption>
-          <TableHead>
-            <TableRow>
-              <TableCell>Position size</TableCell>
-              <TableCell align="right">Position value</TableCell>
-              <TableCell align="right">Entry Price</TableCell>
-              <TableCell align="right">P/L unrealized</TableCell>
-              <TableCell align="right">P/L realized</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th">{state.shares} BTC</TableCell>
-              <TableCell align="right">{state.price ? (formatter.format(parseFloat(state.price) * state.shares)) : <p>-</p>}</TableCell>
-              <TableCell align="right">{formatter.format(state.entry)}</TableCell>
-              <TableCell align="right">{formatter.format((parseFloat(state.price) - state.entry) * state.shares)}</TableCell>
-              <TableCell align="right">{formatter.format(state.realized)}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <StylesProvider injectFirst>
+          <Table className={classes.table} aria-label="caption table">
+            <caption>Position information</caption>
+            <TableHead>
+              <TableRow >
+                <TableCell >Position size</TableCell>
+                <TableCell align="right">Position value</TableCell>
+                <TableCell align="right">Entry Price</TableCell>
+                <TableCell align="right">P/L unrealized</TableCell>
+                <TableCell align="right">P/L realized</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th">{state.shares} BTC</TableCell>
+                <TableCell align="right">{state.price ? (formatter.format(parseFloat(state.price) * state.shares)) : <p>-</p>}</TableCell>
+                <TableCell align="right">{formatter.format(state.entry)}</TableCell>
+                <TableCell align="right">{formatter.format((parseFloat(state.price) - state.entry) * state.shares)}</TableCell>
+                <TableCell align="right">{formatter.format(state.realized)}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </StylesProvider>
       </TableContainer>
+
     </div>
   );
 }
