@@ -20,7 +20,8 @@ const useStyles = makeStyles({
     paddingLeft: '10px',
     paddingRight: '10px',
     fontFamily: 'Roboto',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: '1.3em'
   }
 });
 
@@ -148,7 +149,7 @@ function App() {
         id="amount"
         name="amount"
         type="number"
-        inputProps={{ min: 1, max: 9999, style: { textAlign: 'center' }}}
+        inputProps={{ min: 1, max: 9999, style: { textAlign: 'center', fontSize: '1.3em' }}}
         value={state.amount}
         onChange={handleAmountChange}
       />
