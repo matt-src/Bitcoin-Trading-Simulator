@@ -9,12 +9,19 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650, //TODO: make this bigger so the table can't get cut off
+    minWidth: 650 //TODO: make this bigger so the table can't get cut off
   },
+  amountLabel: {
+    paddingLeft: '10px',
+    paddingRight: '10px',
+    fontFamily: 'Roboto',
+    fontWeight: 'bold'
+  }
 });
 
 function App() {
@@ -74,6 +81,13 @@ function App() {
           entry: newEntry
         };
       case AMOUNT_CHANGE:
+        console.log("amount change");
+        if(action.value > 9999){
+          return {
+            ...state,
+            amount: 9999
+          }
+        } 
         return {
           ...state,
           amount: action.value
@@ -125,20 +139,16 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD <Button onClick={updatePrice} variant="contained" color="primary">Update</Button></h2>
-      <h2>Previous: {formatter.format(state.prevPrice)}</h2>
-      <h2>Change: {formatter.format(state.change)}</h2>
+      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span>⮝</span> : <span>⮟</span>}{formatter.format(state.change)}</h2>
       <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
       <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
 
-      <label htmlFor="amount">Amount</label>
-      <input
+      <label htmlFor="amount" className={classes.amountLabel}>Amount</label>
+      <Input
         id="amount"
         name="amount"
         type="number"
-        min="1"
-        max="1000"
-        placeholder="1"
+        inputProps={{ min: 1, max: 9999, style: { textAlign: 'center' }}}
         value={state.amount}
         onChange={handleAmountChange}
       />
