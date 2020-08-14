@@ -1,4 +1,5 @@
 import './App.css';
+import ErrorSnackbar from './ErrorSnackbar.js';
 import { getPriceFromApi } from './helpers/Prices';
 import React, { useReducer, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
@@ -32,6 +33,8 @@ function App() {
   const TRADE_EXECUTE = 'TRADE_EXECUTE';
   const AMOUNT_CHANGE = 'AMOUNT_CHANGE';
   const PRICE_UPDATE = 'PRICE_UPDATE';
+  const SNACKBAR_CLOSE = 'SNACKBAR_CLOSE';
+  const SNACKBAR_OPEN = 'SNACKBAR_OPEN';
 
   const initialState = {
     shares: 0, //Position size in BTC
@@ -40,7 +43,8 @@ function App() {
     price: 0, //Current BTC price in USD
     prevPrice: 0, //Previous BTC price in USD
     change: 0, //Change from previous price to current
-    realized: 0 //Realized profit on position
+    realized: 0, //Realized profit on position
+    showSnackbar: false //Display "can't have less than 0 shares" error snackbar
   }
 
   const [state, dispatch] = useReducer(reducer, initialState); //Difference from last price
@@ -106,6 +110,16 @@ function App() {
           price: action.price,
           change: action.price - prevPrice
         }
+      case SNACKBAR_CLOSE:
+        return {
+          ...state,
+          showSnackbar: false
+        }
+      case SNACKBAR_OPEN:
+        return {
+          ...state,
+          showSnackbar: true
+        }
       default:
         throw new Error();
     }
@@ -120,10 +134,19 @@ function App() {
     tradeShares(state.amount);
   };
 
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    dispatch({ type: SNACKBAR_CLOSE });
+  };
+
   const sellShares = () => {
     let newAmount = state.shares - state.amount;
     if (newAmount < 0) {
       console.log("can't have less than 0 shares"); //TODO: display this message on the page instead of just in the console
+      dispatch({type: SNACKBAR_OPEN});
       return;
     }
     tradeShares(state.amount * -1);
@@ -155,6 +178,7 @@ function App() {
         value={state.amount}
         onChange={handleAmountChange}
       />
+      <ErrorSnackbar handleClose={handleSnackbarClose} open={state.showSnackbar}/>
       <TableContainer component={Paper}>
         <StylesProvider injectFirst>
           <Table className={classes.table} aria-label="caption table">
