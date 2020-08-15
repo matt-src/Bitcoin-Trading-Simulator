@@ -165,7 +165,7 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
-      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span style={{ color: 'limegreen' }}>⮝</span> : <span style={{ color: 'red' }}>⮟</span>}{formatter.format(state.change)}</h2>
+      <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span style={{ color: 'limegreen' }}>▲</span> : <span style={{ color: 'red' }}>▼</span>}{formatter.format(state.change)}</h2>
       <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
       <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
 
