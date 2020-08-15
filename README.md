@@ -1,5 +1,5 @@
-#Simulates trading bitcoin, using live price updates
+# Simulates trading bitcoin, using live price updates
 
-##Built with React
+## Built with React
 
-##Hosted at https://bitrekt.herokuapp.com/
+## Hosted at https://bitrekt.herokuapp.com/
