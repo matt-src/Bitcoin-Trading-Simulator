@@ -44,7 +44,8 @@ function App() {
     prevPrice: 0, //Previous BTC price in USD
     change: 0, //Change from previous price to current
     realized: 0, //Realized profit on position
-    showSnackbar: false //Display "can't have less than 0 shares" error snackbar
+    showSnackbar: false, //Display "can't have less than 0 shares" error snackbar
+    balance: 1000
   }
 
   const [state, dispatch] = useReducer(reducer, initialState); //Difference from last price
@@ -88,7 +89,6 @@ function App() {
           entry: newEntry
         };
       case AMOUNT_CHANGE:
-        console.log("amount change");
         if (action.value > 9999) {
           return {
             ...state,
@@ -100,10 +100,19 @@ function App() {
           amount: action.value
         }
       case PRICE_UPDATE:
+        if(action.price == state.price){
+          return state; //No price change, don't update anything
+        }
         let prevPrice = state.price; //Current price becomes previous price
         if (state.price == 0) { //This is our first price update, so set previous price to current price
           prevPrice = action.price;
         }
+        //Calculate adjusted balance and check if we are liquidated
+        let unrealized = (parseFloat(action.price) - state.entry) * state.shares;
+        if(state.balance + unrealized <= 0){
+          console.log("rekt"); //TODO: rekt logic
+        }
+
         return {
           ...state,
           prevPrice: prevPrice,
@@ -150,8 +159,10 @@ function App() {
       return;
     }
     tradeShares(state.amount * -1);
-    //Update realized PNL
-    state.realized = (state.realized + (state.amount * (state.price - state.entry)));
+    //Update realized and balance PNL TODO: move to reducers
+    let realizedChange = state.amount * (state.price - state.entry);
+    state.realized = state.realized + realizedChange;
+    state.balance = state.balance + realizedChange;
   };
 
   const tradeShares = (tradeAmount) => {
@@ -165,6 +176,7 @@ function App() {
   return (
     <div className="App">
       <h1>Rekt Simulator</h1>
+      <h2>Balance: {formatter.format(state.balance)} USD ({formatter.format(state.balance + (parseFloat(state.price) - state.entry) * state.shares)})</h2>
       <h2>BTC {state.price ? formatter.format(state.price) : <p>-</p>} USD {state.change >= 0 ? <span style={{ color: 'limegreen' }}>▲</span> : <span style={{ color: 'red' }}>▼</span>}{formatter.format(state.change)}</h2>
       <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
       <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
