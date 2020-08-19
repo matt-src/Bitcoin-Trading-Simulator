@@ -11,20 +11,6 @@ import { PositionView } from './components/PositionView';
 import { TradeWidget } from './components/TradeWidget';
 import { useDispatch } from 'react-redux'
 
-const useStyles = makeStyles({
-  table: {
-    maxWidth: '800px',
-    margin: "auto"
-  },
-  amountLabel: {
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    fontFamily: 'Roboto',
-    fontWeight: 'bold',
-    fontSize: '1.3em'
-  }
-});
-
 function App() {
 
   const dispatch = useDispatch();
@@ -54,7 +40,7 @@ function App() {
       <BalanceView />
       <PriceView />
       <TradeWidget />
-      <ErrorSnackbar handleClose={handleSnackbarClose} open={state.showSnackbar} />
+      <ErrorSnackbar />
       <PositionView />
     </div>
   );

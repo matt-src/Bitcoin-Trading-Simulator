@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux'
-import executeTrade from '../actions/index'
+import {executeTrade} from '../actions/index'
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import { StylesProvider, makeStyles } from '@material-ui/core/styles';
 
-export const TradeWidget = ({ amount }) => {
+export const TradeWidget = () => {
     const [amount, setAmount] = useState(1);
     const dispatch = useDispatch();
 

@@ -14,8 +14,11 @@ const initialState = {
 }
 
 function rootReducer(state = initialState, action) {
-    
+    console.log("action:");
+    console.log(action);
+
     switch (action.type) {
+
         case TRADE_EXECUTE:
             let tradeAmount = action.payload;
             let newShares = state.shares + parseInt(tradeAmount);
@@ -85,7 +88,10 @@ function rootReducer(state = initialState, action) {
                 showSnackbar: true
             }
         default:
-            throw new Error();
+            console.log("No handler for action:");
+            console.log(action);
+            return state;
+            //throw new Error();
     }
 }
 
