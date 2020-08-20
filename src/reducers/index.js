@@ -13,11 +13,6 @@ const initialState = {
 }
 
 function rootReducer(state = initialState, action) {
-    console.log("action:");
-    console.log(action);
-    console.log("state:")
-    console.log(state);
-
     switch (action.type) {
 
         case TRADE_EXECUTE:
@@ -93,7 +88,7 @@ function rootReducer(state = initialState, action) {
             console.log("No handler for action:");
             console.log(action);
             return state;
-            //throw new Error();
+        //throw new Error();
     }
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux'
-import {executeTrade} from '../actions/index'
+import { executeTrade } from '../actions/index'
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,19 +11,19 @@ export const TradeWidget = () => {
 
     const useStyles = makeStyles({
         amountLabel: {
-          paddingLeft: '10px',
-          paddingRight: '10px',
-          fontFamily: 'Roboto',
-          fontWeight: 'bold',
-          fontSize: '1.3em'
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            fontFamily: 'Roboto',
+            fontWeight: 'bold',
+            fontSize: '1.3em'
         }
-      });
+    });
 
     const classes = useStyles();
 
     const handleAmountChange = (e) => {
         let newAmount = e.target.value;
-        if(newAmount > 9999) newAmount = 9999;
+        if (newAmount > 9999) newAmount = 9999;
         setAmount(e.target.value);
     };
 

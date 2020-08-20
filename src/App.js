@@ -1,15 +1,14 @@
 import './App.css';
-import {ErrorSnackbar} from './components/ErrorSnackbar.js';
-import {BalanceView} from './components/BalanceView.js';
-import {PriceView} from './components/PriceView.js';
-import store from "./store/index";
+import { ErrorSnackbar } from './components/ErrorSnackbar.js';
+import { BalanceView } from './components/BalanceView.js';
+import { PriceView } from './components/PriceView.js';
 import { updatePrice } from "./actions/index";
 import { getPriceFromApi } from './helpers/Prices';
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { PositionView } from './components/PositionView';
 import { TradeWidget } from './components/TradeWidget';
 import { useDispatch } from 'react-redux'
+import { GithubLink } from './components/GithubLink'
 
 function App() {
 
@@ -42,6 +41,7 @@ function App() {
       <TradeWidget />
       <ErrorSnackbar />
       <PositionView />
+      <GithubLink />
     </div>
   );
 }
