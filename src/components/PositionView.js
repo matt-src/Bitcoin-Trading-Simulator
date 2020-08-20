@@ -21,7 +21,7 @@ export const PositionView = () => {
 
   const classes = useStyles();
 
-  // Create our number formatter.
+  // Create our number formatter. TODO: move this to its own file to be DRY
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

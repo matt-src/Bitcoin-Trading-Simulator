@@ -1,5 +1,4 @@
 import { TRADE_EXECUTE, SNACKBAR_OPEN, SNACKBAR_CLOSE, PRICE_UPDATE } from "../constants/action-types";
-import { useDispatch } from 'react-redux'
 
 const initialState = {
     shares: 0, //Position size in BTC
