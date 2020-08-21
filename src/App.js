@@ -30,8 +30,16 @@ function App() {
   }, []);
 
   const fetchAndUpdatePrice = async () => {
-    let newPriceData = await getPriceFromApi();
-    dispatch(updatePrice(newPriceData.data.USD.last));
+    let newBitcoinPrice = await getPriceFromApi('btc');
+    let newEthereumPrice = await getPriceFromApi('eth');
+    let newLitecoinPrice = await getPriceFromApi('ltc');
+    let newPriceData = {
+      'btc': newBitcoinPrice.data.bitcoin,
+      'eth': newEthereumPrice.data.ethereum,
+      'ltc': newLitecoinPrice.data.litecoin
+    }
+    console.log(newPriceData)
+    dispatch(updatePrice(newPriceData));
   };
 
   return (

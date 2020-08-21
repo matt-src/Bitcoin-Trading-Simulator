@@ -4,8 +4,16 @@ const initialState = {
     shares: 0, //Position size in BTC
     entry: 0, //Average entry price of position
     amount: 1, //Amount to buy/sell upon trade
-    price: 0, //Current BTC price in USD
-    prevPrice: 0, //Previous BTC price in USD
+    prices: {
+        'btc': 0, //Current BTC price in USD
+        'eth': 0, //Current ETH price in USD
+        'ltc': 0 //Current LTC price in USD
+    },
+    prevPrices: {
+        'btc': 0, //Previous BTC price in USD
+        'eth': 0, //Previous ETH price in USD
+        'ltc': 0 //Previous LTC price in USD
+    },
     change: 0, //Change from previous price to current
     realized: 0, //Realized profit on position
     showSnackbar: false, //Display "can't have less than 0 shares" error snackbar
@@ -59,11 +67,11 @@ function rootReducer(state = initialState, action) {
                 balance: newBalance //This will only be changed if this is a sell order
             };
         case PRICE_UPDATE:
-            if (action.payload == state.price) {
+            /**if (action.payload == state.prices) { //Add lodash isEqual here
                 return state; //No price change, don't update anything
-            }
-            let prevPrice = state.price; //Current price becomes previous price
-            if (state.price == 0) { //This is our first price update, so set previous price to current price
+            }*/
+            let prevPrices = state.prices; //Current price becomes previous price
+            if (state.prices['btc'] == 0) { //This is our first price update, so set previous price to current price
                 prevPrice = action.payload;
             }
             //Calculate adjusted balance and check if we are liquidated

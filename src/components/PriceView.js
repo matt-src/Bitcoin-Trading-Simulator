@@ -2,7 +2,7 @@ import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux'
 
 export const PriceView = () => {
-    const { price, change } = useSelector(state => state, shallowEqual);
+    const { price, change, selectedCoin } = useSelector(state => state, shallowEqual);
 
     // Create our number formatter. TODO: move this to its own file to be DRY
     const formatter = new Intl.NumberFormat('en-US', {
@@ -11,6 +11,6 @@ export const PriceView = () => {
     });
 
     return (
-        <h2>BTC {price ? formatter.format(price) : <p>-</p>} USD {change >= 0 ? <span style={{ color: 'limegreen' }}>▲</span> : <span style={{ color: 'red' }}>▼</span>}{formatter.format(change)}</h2>
+        <h2>{selectedCoin.toUpperCase()} {price ? formatter.format(price) : <p>-</p>} USD {change >= 0 ? <span style={{ color: 'limegreen' }}>▲</span> : <span style={{ color: 'red' }}>▼</span>}{formatter.format(change)}</h2>
     );
 }
