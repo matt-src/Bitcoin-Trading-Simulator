@@ -1,11 +1,11 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import {closeSnackbar} from '../actions/index'
+import { closeSnackbar } from '../actions/index'
 import { useSelector, useDispatch } from 'react-redux'
 
 export const ErrorSnackbar = () => {
-    const open = useSelector(state => state.open);
+    const open = useSelector(state => state.showSnackbar);
     const dispatch = useDispatch();
 
     const handleClose = (event, reason) => {

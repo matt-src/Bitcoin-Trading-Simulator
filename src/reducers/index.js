@@ -35,12 +35,14 @@ function rootReducer(state = initialState, action) {
                 //Check if this sell will bring us below 0 BTC
                 //TODO: Dispatching from reducer is an antipattern, move this check to a middleware, or
                 //modify snackbar state here
-                /**let newAmount = state.shares + amount;
+                let newAmount = state.shares + tradeAmount;
                 if (newAmount < 0) {
                     console.log("can't have less than 0 BTC");
-                    dispatch({ type: SNACKBAR_OPEN });
-                    return;
-                }*/
+                    return {
+                        ...state,
+                        showSnackbar: true
+                    }
+                }
                 //Update realized PNL and balance
                 let realizedChange = (tradeAmount * -1) * (state.price - state.entry);
                 newRealized = state.realized + realizedChange;
