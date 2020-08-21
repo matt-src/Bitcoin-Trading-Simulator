@@ -1,4 +1,4 @@
-import { TRADE_EXECUTE, SNACKBAR_OPEN, SNACKBAR_CLOSE, PRICE_UPDATE } from "../constants/action-types";
+import { TRADE_EXECUTE, SNACKBAR_OPEN, SNACKBAR_CLOSE, PRICE_UPDATE, SELECT_COIN } from "../constants/action-types";
 
 const initialState = {
     shares: 0, //Position size in BTC
@@ -10,7 +10,8 @@ const initialState = {
     realized: 0, //Realized profit on position
     showSnackbar: false, //Display "can't have less than 0 shares" error snackbar
     balance: 1000, //Current USD balance
-    liquidated: false //Has our account been liquidated
+    liquidated: false, //Has our account been liquidated
+    selectedCoin: 'btc'
 }
 
 function rootReducer(state = initialState, action) {
@@ -71,7 +72,7 @@ function rootReducer(state = initialState, action) {
                 console.log("rekt");
                 return {
                     ...state,
-                    liquidated : true
+                    liquidated: true
                 }
             }
 
@@ -90,6 +91,11 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 showSnackbar: true
+            }
+        case SELECT_COIN:
+            return {
+                ...state,
+                selectedCoin: action.payload
             }
         default:
             console.log("No handler for action:");

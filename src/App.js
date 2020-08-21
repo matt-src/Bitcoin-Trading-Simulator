@@ -2,6 +2,7 @@ import './App.css';
 
 import { updatePrice } from "./actions/index";
 import { getPriceFromApi } from './helpers/Prices';
+import { CoinSelector } from './components/CoinSelector';
 import { TradeContainer } from "./components/TradeContainer";
 import { LiquidatedView } from "./components/LiquidatedView";
 import { GithubLink } from './components/GithubLink'
@@ -11,12 +12,10 @@ import { useDispatch } from 'react-redux'
 
 import { useSelector } from 'react-redux';
 
+
 function App() {
   const liquidated = useSelector(state => state.liquidated);
-
   const dispatch = useDispatch();
-
-  //const classes = useStyles();
 
   useEffect(() => {
     //Do initial price update
@@ -38,6 +37,7 @@ function App() {
   return (
     <div className="App">
       <h1>Trading Simulator</h1>
+      <CoinSelector />
       {liquidated ? <LiquidatedView /> : <TradeContainer />}
       <GithubLink />
     </div>

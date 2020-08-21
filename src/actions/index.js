@@ -3,7 +3,8 @@ import {
     SNACKBAR_CLOSE,
     SNACKBAR_OPEN,
     TRADE_EXECUTE,
-    AMOUNT_CHANGE
+    AMOUNT_CHANGE,
+    SELECT_COIN
 } from "../constants/action-types";
 
 export function updatePrice(payload) {
@@ -24,4 +25,8 @@ export function executeTrade(payload) {
 
 export function changeAmount(payload) {
     return { type: AMOUNT_CHANGE, payload }
+};
+
+export function selectCoin(payload) {
+    return { type: SELECT_COIN, payload }
 };
