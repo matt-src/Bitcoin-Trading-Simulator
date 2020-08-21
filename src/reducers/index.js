@@ -9,7 +9,8 @@ const initialState = {
     change: 0, //Change from previous price to current
     realized: 0, //Realized profit on position
     showSnackbar: false, //Display "can't have less than 0 shares" error snackbar
-    balance: 1000
+    balance: 1000, //Current USD balance
+    liquidated: false //Has our account been liquidated
 }
 
 function rootReducer(state = initialState, action) {
@@ -67,7 +68,11 @@ function rootReducer(state = initialState, action) {
             //Calculate adjusted balance and check if we are liquidated
             let unrealized = (parseFloat(action.payload) - state.entry) * state.shares;
             if (state.balance + unrealized <= 0) {
-                console.log("rekt"); //TODO: rekt logic
+                console.log("rekt");
+                return {
+                    ...state,
+                    liquidated : true
+                }
             }
 
             return {

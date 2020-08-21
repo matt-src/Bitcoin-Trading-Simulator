@@ -1,16 +1,18 @@
 import './App.css';
-import { ErrorSnackbar } from './components/ErrorSnackbar.js';
-import { BalanceView } from './components/BalanceView.js';
-import { PriceView } from './components/PriceView.js';
+
 import { updatePrice } from "./actions/index";
 import { getPriceFromApi } from './helpers/Prices';
-import React, { useEffect } from 'react';
-import { PositionView } from './components/PositionView';
-import { TradeWidget } from './components/TradeWidget';
-import { useDispatch } from 'react-redux'
+import { TradeContainer } from "./components/TradeContainer";
+import { LiquidatedView } from "./components/LiquidatedView";
 import { GithubLink } from './components/GithubLink'
+import React, { useEffect } from 'react';
+
+import { useDispatch } from 'react-redux'
+
+import { useSelector } from 'react-redux';
 
 function App() {
+  const liquidated = useSelector(state => state.liquidated);
 
   const dispatch = useDispatch();
 
@@ -35,12 +37,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Rekt Simulator</h1>
-      <BalanceView />
-      <PriceView />
-      <TradeWidget />
-      <ErrorSnackbar />
-      <PositionView />
+      <h1>Trading Simulator</h1>
+      {liquidated ? <LiquidatedView /> : <TradeContainer />}
       <GithubLink />
     </div>
   );

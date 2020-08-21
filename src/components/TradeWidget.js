@@ -24,7 +24,7 @@ export const TradeWidget = () => {
     const handleAmountChange = (e) => {
         let newAmount = e.target.value;
         if (newAmount > 9999) newAmount = 9999;
-        setAmount(e.target.value);
+        setAmount(newAmount);
     };
 
     const buyShares = () => {
