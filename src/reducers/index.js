@@ -28,7 +28,7 @@ function rootReducer(state = initialState, action) {
                 let valueOfCurrentHoldings = (state.shares * state.entry);
                 let valueOfNewHoldings = tradeAmount * rate;
                 let totalAmount = state.shares + tradeAmount;
-                console.log("totalAmount is " + totalAmount);
+                //console.log("totalAmount is " + totalAmount);
                 newEntry = (valueOfCurrentHoldings + valueOfNewHoldings) / totalAmount;
             }
 
@@ -58,11 +58,11 @@ function rootReducer(state = initialState, action) {
                 balance: newBalance //This will only be changed if this is a sell order
             };
         case PRICE_UPDATE:
-            if (action.payload == state.price) {
+            if (action.payload === state.price) {
                 return state; //No price change, don't update anything
             }
             let prevPrice = state.price; //Current price becomes previous price
-            if (state.price == 0) { //This is our first price update, so set previous price to current price
+            if (state.price === 0) { //This is our first price update, so set previous price to current price
                 prevPrice = action.payload;
             }
             //Calculate adjusted balance and check if we are liquidated

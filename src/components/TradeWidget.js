@@ -36,7 +36,7 @@ export const TradeWidget = () => {
     };
 
     return (
-        <p>
+        <React.Fragment>
             <Button variant="contained" color="primary" onClick={buyShares}>Buy</Button>
             <Button variant="contained" color="secondary" onClick={sellShares}>Sell</Button>
             <label htmlFor="amount" className={classes.amountLabel}>Amount</label>
@@ -48,7 +48,7 @@ export const TradeWidget = () => {
                 value={amount}
                 onChange={handleAmountChange}
             />
-        </p>
+        </React.Fragment>
     );
 }
 
