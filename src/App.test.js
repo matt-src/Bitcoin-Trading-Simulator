@@ -5,7 +5,14 @@ import { Provider } from 'react-redux'
 import store from "./store/index";
 import userEvent from '@testing-library/user-event'
 import { updatePrice, executeTrade } from "./actions/index";
+require('chromedriver');
+const webdriver = require('selenium-webdriver'),
+    By = webdriver.By,
+    until = webdriver.until;
 
+const driver = new webdriver.Builder()
+    .forBrowser('chrome')
+    .build();
 
 test('setting amount input changes amount traded', async () => {
   render(
@@ -24,7 +31,6 @@ test('dispatching a price update action updates price', async () => {
     </Provider>);
   store.dispatch(updatePrice(500));
   expect(store.getState().price).toEqual(500);
-  console.log(store.getState());
 });
 
 test('selling shares updates realized PNL', async () => {
@@ -34,5 +40,10 @@ test('selling shares updates realized PNL', async () => {
     </Provider>);
   store.dispatch(executeTrade(-10));
   expect(store.getState().realized).toEqual(5000);
-  console.log(store.getState());
 });
+
+test('validate title on the home page', async () => {
+  await driver.get('localhost:3000')
+  const title = await driver.findElement(By.tagName('h1')).getText()
+  expect(title).toContain('Trading Simulator')
+})
