@@ -1,15 +1,19 @@
 import './App.css';
 
+import React, { useEffect } from 'react';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { updatePrice } from "./actions/index";
 import { getPriceFromApi } from './helpers/Prices';
 import { TradeContainer } from "./components/TradeContainer";
 import { LiquidatedView } from "./components/LiquidatedView";
 import { GithubLink } from './components/GithubLink'
-import React, { useEffect } from 'react';
+import { PrivateRoute } from './components/PrivateRoute'
+import { LoginView } from './components/LoginView'
+
 
 import { useDispatch } from 'react-redux'
-
 import { useSelector } from 'react-redux';
+
 
 function App() {
   const liquidated = useSelector(state => state.liquidated);
@@ -37,8 +41,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Trading Simulator</h1>
-      {liquidated ? <LiquidatedView /> : <TradeContainer />}
+      <h1>Trading Simulator With Login</h1>
+      <Switch>
+        <PrivateRoute exact path="/" component={TradeContainer} />
+        <Route path="/liquidated" component={LiquidatedView} />
+        <Route path="/login" component={LoginView} />
+        <Redirect from="*" to="/" />
+      </Switch>
       <GithubLink />
     </div>
   );
